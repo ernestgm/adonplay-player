@@ -22,11 +22,11 @@ export const getLoginCode = async (deviceId: string, code: string) => {
         };
     }
 }
-export const signIn = async (email: string, password: string) => {
+export const signIn = async (code: string, device_id: string, user_id: string) => {
     try {
         return await apiPost(
-            `${process.env.NEXT_PUBLIC_API_URL}/login`,
-            {email, password},
+            `${process.env.NEXT_PUBLIC_API_URL}/login_device`,
+            {code: code, device_id: device_id, user_id: user_id },
             {},
             true
         );

@@ -1,15 +1,19 @@
 "use client";
 
 import React, {useEffect, useState} from "react";
-import {getLoginCode} from "@/server/api/auth";
+import {getLoginCode, signIn} from "@/server/api/auth";
 import Cookies from "js-cookie";
 import {useError} from "@/context/ErrorContext";
 import {QRCodeCanvas} from "qrcode.react";
+import {useLoginActionsChannel} from "@/websockets/channels/loginAtionsChannel";
+import {useRouter, useSearchParams} from "next/navigation";
 
 export default function SignInForm() {
     const [loginCode, setLoginCode] = useState(null);
     const [code, setCode] = useState([]);
     const setError = useError().setError;
+    const router = useRouter();
+    const searchParams = useSearchParams();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -20,7 +24,6 @@ export default function SignInForm() {
                 const data = await getLoginCode(deviceId, deviceCode);
                 setLoginCode(data);
                 setCode(String(data?.code).split(""))
-
             } catch (err) {
                 setError(err.data?.message || err.message || "Error al iniciar sesión");
             }
@@ -28,6 +31,26 @@ export default function SignInForm() {
 
         fetchData();
     }, []);
+
+    useLoginActionsChannel(Cookies.get("device_id"), async (data) => {
+        console.log(data);
+        if (data.type === "ejecute_login") {
+            try {
+                const response = await signIn(
+                    data.payload.code,
+                    data.payload.device_id,
+                    data.payload.user_id
+                )
+                Cookies.set("auth_token", response.token, { path: "/" });
+                Cookies.set("user", JSON.stringify(response.user), { path: "/" });
+                const redirect = searchParams.get("redirect");
+                router.push(redirect || "/home");
+            } catch (err) {
+                setError(err.data?.message || err.message || "Error al iniciar sesión");
+            }
+
+        }
+    })
 
     function generateCodeHtml(code) {
         // Ensure the code is a 6-digit string
