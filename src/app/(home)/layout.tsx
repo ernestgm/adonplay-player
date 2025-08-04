@@ -1,16 +1,10 @@
 "use client";
 
-import {useSidebar} from "@/context/SidebarContext";
 import AppHeader from "@/layout/AppHeader";
-import AppSidebar from "@/layout/AppSidebar";
-import Backdrop from "@/layout/Backdrop";
 import React from "react";
 import {MessageProvider} from "@/context/MessageContext";
-import GlobalLoadingIndicator from "@/components/ui/loading/globalLoadingIndicator";
 
-export default function AdminLayout({
-                                        children,
-                                    }: {
+export default function AdminLayout({children,}: {
     children: React.ReactNode;
 }) {
     return (

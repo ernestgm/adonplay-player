@@ -44,7 +44,7 @@ export default function SignInForm() {
                 Cookies.set("auth_token", response.token, { path: "/" });
                 Cookies.set("user", JSON.stringify(response.user), { path: "/" });
                 const redirect = searchParams.get("redirect");
-                router.push(redirect || "/home");
+                router.push(redirect || "/");
             } catch (err) {
                 setError(err.data?.message || err.message || "Error al iniciar sesión");
             }
