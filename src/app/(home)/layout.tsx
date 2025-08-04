@@ -3,6 +3,7 @@
 import AppHeader from "@/layout/AppHeader";
 import React from "react";
 import {MessageProvider} from "@/context/MessageContext";
+import {GlobalsActionCableListenersProvider} from "@/context/GlobalsActionCableListenersContext";
 
 export default function AdminLayout({children,}: {
     children: React.ReactNode;
@@ -15,7 +16,9 @@ export default function AdminLayout({children,}: {
                 {/* Page Content */}
                 <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
                     <MessageProvider>
-                        {children}
+                        <GlobalsActionCableListenersProvider>
+                            {children}
+                        </GlobalsActionCableListenersProvider>
                     </MessageProvider>
                 </div>
             </div>

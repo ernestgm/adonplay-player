@@ -6,6 +6,7 @@ import {useSidebar} from "@/context/SidebarContext";
 import Image from "next/image";
 import Link from "next/link";
 import React, {useState, useEffect, useRef} from "react";
+import {MdOutlineTv} from "react-icons/md";
 
 const AppHeader: React.FC = () => {
     const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
@@ -16,6 +17,17 @@ const AppHeader: React.FC = () => {
             <div className="flex flex-col items-center justify-between grow lg:flex-row lg:px-6">
                 <div
                     className="flex items-center justify-between w-full gap-2 px-3 py-3 border-b border-gray-200 dark:border-gray-800 sm:gap-4 lg:justify-normal lg:border-b-0 lg:px-0 lg:py-4">
+                    <div>
+                        {
+                            <Image
+                                className="dark:hidden"
+                                src="/images/logo/logo.svg"
+                                alt="Logo"
+                                width={150}
+                                height={40}
+                            />
+                        }
+                    </div>
                     <div
                         className={`${
                             isApplicationMenuOpen ? "flex" : "hidden"

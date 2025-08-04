@@ -11,9 +11,10 @@ import Image from "next/image";
 import ThemeTogglerTwo from "@/components/common/ThemeTogglerTwo";
 
 export default function Home() {
+
   return (
       <div>
-        <div className="w-full h-screen bg-brand-950 dark:bg-white/5 lg:grid items-center">
+        <div className="w-full dark:bg-white/5 lg:grid items-center">
           <div className="relative items-center justify-center  flex z-1">
             <h1>Home</h1>
           </div>

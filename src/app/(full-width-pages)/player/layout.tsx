@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import {GlobalsActionCableListenersProvider} from "@/context/GlobalsActionCableListenersContext";
 
 export default function PlayerLayout({
   children,
@@ -15,7 +16,9 @@ export default function PlayerLayout({
     <div className="relative p-6 bg-white z-1 dark:bg-gray-900 sm:p-0">
       <ThemeProvider>
         <div className="relative flex lg:flex-row w-full h-screen justify-center flex-col  dark:bg-gray-900 sm:p-0">
-          {children}
+            <GlobalsActionCableListenersProvider>
+                {children}
+            </GlobalsActionCableListenersProvider>
         </div>
       </ThemeProvider>
     </div>
