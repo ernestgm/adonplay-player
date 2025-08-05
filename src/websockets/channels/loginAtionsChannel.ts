@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import cable from "../lib/cable";
 import {initializeActionCable} from "@/websockets/actionCable";
 
 export function useLoginActionsChannel(deviceId, onReceived) {

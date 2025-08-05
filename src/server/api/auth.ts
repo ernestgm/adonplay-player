@@ -47,3 +47,7 @@ export const getDataUserAuth = () => {
     const userAuth = typeof window !== "undefined" ? Cookies.get("user") : null;
     return userAuth ? JSON.parse(userAuth) : null;
 };
+
+export const getDeviceID = () => {
+    return typeof window !== "undefined" ? Cookies.get("device_id") : null;
+};

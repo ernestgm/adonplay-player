@@ -1,7 +1,7 @@
 "use client";
 
 import React, {useEffect, useState} from "react";
-import {getLoginCode, signIn} from "@/server/api/auth";
+import {getDeviceID, getLoginCode, signIn} from "@/server/api/auth";
 import Cookies from "js-cookie";
 import {useError} from "@/context/ErrorContext";
 import {QRCodeCanvas} from "qrcode.react";
@@ -9,7 +9,7 @@ import {useLoginActionsChannel} from "@/websockets/channels/loginAtionsChannel";
 import {useRouter, useSearchParams} from "next/navigation";
 
 export default function SignInForm() {
-    const [loginCode, setLoginCode] = useState(null);
+    const deviceId = getDeviceID()
     const [code, setCode] = useState([]);
     const setError = useError().setError;
     const router = useRouter();
@@ -18,11 +18,8 @@ export default function SignInForm() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const deviceId = Cookies.get("device_id");
                 const deviceCode = Cookies.get("device_code");
-
                 const data = await getLoginCode(deviceId, deviceCode);
-                setLoginCode(data);
                 setCode(String(data?.code).split(""))
             } catch (err) {
                 setError(err.data?.message || err.message || "Error al iniciar sesión");
@@ -32,7 +29,7 @@ export default function SignInForm() {
         fetchData();
     }, []);
 
-    useLoginActionsChannel(Cookies.get("device_id"), async (data) => {
+    useLoginActionsChannel(deviceId, async (data) => {
         console.log(data);
         if (data.type === "ejecute_login") {
             try {
@@ -79,7 +76,10 @@ export default function SignInForm() {
                             device.</p>
 
                         <div className="mb-10">
-                            <QRCodeCanvas value={process.env.NEXT_PUBLIC_ACTIVATE_DEVICE_URL} size={200}/>
+                            <QRCodeCanvas
+                                value={process.env.NEXT_PUBLIC_ACTIVATE_DEVICE_URL}
+                                size={200}
+                            />
                         </div>
 
                         <div className="mb-6">
