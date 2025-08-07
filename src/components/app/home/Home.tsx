@@ -4,7 +4,7 @@ import {getDataUserAuth, getDeviceID, getLoginCode, signIn} from "@/server/api/a
 import {useError} from "@/context/ErrorContext";
 import {getDevice} from "@/server/api/devices";
 import GridShape from "@/components/common/GridShape";
-import {Loading} from "@/components/ui/loadings/loading";
+import {Loading} from "@/components/ui/loadings/Loading";
 import {useRouter, useSearchParams} from "next/navigation";
 import {changeDeviceActionsChannel} from "@/websockets/channels/changeDeviceAtionsChannel";
 

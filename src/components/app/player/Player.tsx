@@ -1,24 +1,47 @@
 "use client";
-import Checkbox from "@/components/form/input/Checkbox";
-import Input from "@/components/form/input/InputField";
-import Label from "@/components/form/Label";
-import Button from "@/components/ui/button/Button";
-import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
-import Link from "next/link";
-import React, { useState } from "react";
-import GridShape from "@/components/common/GridShape";
-import Image from "next/image";
-import ThemeTogglerTwo from "@/components/common/ThemeTogglerTwo";
-import {TextLoading} from "@/components/ui/loadings/textLoading";
+import React, {useEffect, useState} from "react";
+import {TextLoading} from "@/components/ui/loadings/TextLoading";
+import {getDevice} from "@/server/api/devices";
+import {getDeviceID} from "@/server/api/auth";
+import {useError} from "@/context/ErrorContext";
+import {Slides} from "@/components/app/player/Slides";
 
 export default function Player() {
-  return (
-      <div>
-        <div className="w-full h-screen lg:grid items-center">
-          <div className="relative items-center justify-center  flex z-1">
-            <TextLoading words={['slides', 'images', 'videos', 'audios', 'qrs']} />
-          </div>
+    const [loading, setLoading] = useState(true);
+    const [slideMedias, setSlideMedias] = useState(null);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await getDevice(getDeviceID());
+                setSlideMedias(data.slide_medias)
+                console.log(data);
+            } catch (err) {
+                setError(err.data?.message || err.message || "Server Error!!!");
+            }
+        };
+
+        fetchData();
+    }, [])
+
+    return (
+        <div>
+            <div className="relative w-full h-screen flex flex-col justify-center">
+                <div className="relative items-center justify-center  flex z-1">
+                    { slideMedias ? (
+                        <Slides slideMedias={slideMedias} />
+                    ) : (
+                        <TextLoading label="Waiting Device's Slides"/>
+                    )}
+                </div>
+                { error &&(
+                        <div className="absolute bottom-0 w-full h-content text-center">
+                            <span className="text-3xl p-2 uppercase text-red-800">{error}</span>
+                        </div>
+                    )
+                }
+            </div>
         </div>
-      </div>
-  );
+    );
 }

@@ -7,15 +7,6 @@ export function middleware(request: NextRequest) {
     const isValidCode: RequestCookie | undefined = request.cookies.get('device_code');
     const isValidDeviceToken: RequestCookie | undefined = request.cookies.get('device_token');
 
-    // "device": {
-    //     "id": 15,
-    //         "device_id": "1cf892da6a0d9e8f",
-    //         "code": "60249620",
-    //         "created_at": "2025-07-31T09:43:24.976Z",
-    //         "updated_at": "2025-07-31T09:43:24.976Z"
-    // },
-    // "token": "eyJhbGciOiJIUzI1NiJ9.eyJkZXZpY2VfaWQiOiIxY2Y4OTJkYTZhMGQ5ZThmIiwiZXhwIjoxNzU0MTE2OTU3fQ.xJXESDYYohX_TW8cUxA5AJOKj2LLsD8WlIjj72G3kx4"
-
     const isAuthenticated:RequestCookie | undefined = request.cookies.get('user');
     const isOnSignin = request.nextUrl.pathname === '/signin';
 
