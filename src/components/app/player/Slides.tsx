@@ -2,30 +2,179 @@
 import React, {useEffect, useState} from "react";
 import {TextLoading} from "@/components/ui/loadings/TextLoading";
 import Image from "next/image";
-import mediaUrl from "@/utils/files";
+import {mediaUrl, imageUrl} from "@/utils/files";
+import {QRCodeCanvas} from "qrcode.react";
+import Marquee from "react-fast-marquee";
 
 interface SlidesProps {
+    device?: any
     slideMedias?: any
 }
-export const Slides: React.FC<SlidesProps> = ({ slideMedias }) => {
+
+export default function Slides({slideMedias, device}: SlidesProps) {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [mediaList, setMediaList] = useState<any[]>([]);
+    const [isOnlyOne, setIsOnlyOne] = useState(true);
+
+    useEffect(() => {
+        setCurrentIndex(0)
+        if (slideMedias) {
+            const sorted = [...slideMedias].sort((a, b) => a.order - b.order);
+            console.log(sorted);
+            setMediaList(sorted);
+        }
+    }, [slideMedias]);
+
+    useEffect(() => {
+        if (mediaList.length === 0) return;
+
+        setIsOnlyOne(mediaList.length === 1);
+
+        const current = mediaList[currentIndex];
+        const duration = current.audio_media
+            ? getAudioDuration(mediaUrl(current.audio_media.file_path))
+            : current.media.media_type === "video"
+                ? getVideoDuration(mediaUrl(current.media.file_path))
+                : current.duration * 1000;
+
+        let timer: NodeJS.Timeout;
+        Promise.resolve(duration).then((ms) => {
+            timer = setTimeout(() => {
+                setCurrentIndex((prev) => (prev + 1) % mediaList.length);
+            }, ms);
+        });
+
+        return () => clearTimeout(timer);
+    }, [currentIndex, mediaList]);
+
+    const current = mediaList[currentIndex];
+
     return (
-        <div>
-            { slideMedias ? (
-                slideMedias.map((slideMedia, index) => (
-                    <div key={index} className="w-full h-full relative">
-                        {slideMedia.media.media_type === 'image' && (
+        <div className="relative w-full h-screen bg-black overflow-hidden flex flex-col">
+            {current && (
+                <div className="w-full h-full flex basis-[80vw] relative">
+                    {current.media.media_type === "image" ? (
+                        <div>
                             <Image
-                                src={mediaUrl(slideMedia?.media.file_path)}
+                                src={imageUrl(current.media.file_path)}
                                 alt="Cover"
-                                className="w-full border border-gray-200 rounded-xl dark:border-gray-800"
-                                fill
+                                fill={true}
+                                objectFit="fill"
+                                quality={75}
+                                className="w-full h-full object-fill"
+                                placeholder="blur"
+                                blurDataURL={imageUrl(current.media.file_path)}
                             />
-                        )}
-                    </div>
-                ))
-            ) : (
-                <TextLoading words={['images', 'videos', 'audios', 'qr', 'marquee']}/>
+
+                            {current.audio_media && (
+                                <audio
+                                    src={mediaUrl(current.audio_media.file_path)}
+                                    autoPlay
+                                    loop={isOnlyOne}
+                                />
+                            )}
+                        </div>
+                    ) : (
+                        <video
+                            src={mediaUrl(current.media.file_path)}
+                            className="w-full h-full object-fill"
+                            autoPlay
+                            muted={true}
+                            loop={isOnlyOne}
+                            onEnded={() => setCurrentIndex((prev) => (prev + 1) % mediaList.length)}
+                        />
+                    )}
+
+                    {current.description && (
+                        <div
+                            className={` absolute z-999999 ${getPositionClass(current.description_position)} ${getTextSizeClass(current.text_size)} text-white p-3`}>
+                            {current.description}
+                        </div>
+                    )}
+
+                    {(current.qr || device.qr) && (
+                        <div
+                            className={` absolute z-999999 bg-amber-50 rounded-b-sm ${getPositionClass(current.qr?.position || device.qr?.position || 'br')} p-1 m-3 `}>
+                            <QRCodeCanvas value={current.qr?.info || device.qr?.info || ''} size={200}/>
+                        </div>
+                    )}
+                </div>
+            )}
+            {device.marquee && (
+                <Marquee
+                    style={{
+                        backgroundColor: device.marquee.background_color,
+                        color: device.marquee.text_color,
+                        position: current?.media.media_type === "video" ? "absolute" : "sticky",
+                        bottom: 0,
+                    }}
+                    className={`w-full text-7xl overflow-hidden p-3 basis-[10vw] sticky uppercase`}
+                    speed={100}
+                >
+                    {device.marquee.message}
+                </Marquee>
             )}
         </div>
     );
+}
+
+function getPositionClass(pos: string | null) {
+    switch (pos) {
+        case "tl":
+            return "left-0 top-0";
+        case "tc":
+            return "top-0 left-1/2 transform -translate-x-1/2";
+        case "tr":
+            return "right-0 top-0";
+        case "ml":
+            return "top-1/2 left-0 transform -translate-y-1/2";
+        case "mc":
+            return "left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2";
+        case "mr":
+            return "right-0 top-1/2 transform -translate-y-1/2";
+        case "bl":
+            return "bottom-0 left-0";
+        case "bc":
+            return "bottom-0 left-1/2 transform -translate-x-1/2";
+        case "br":
+            return "bottom-0 right-0";
+        default:
+            return "bottom-0 right-0";
+    }
+}
+
+function getTextSizeClass(pos: string | null) {
+    switch (pos) {
+        case "xs":
+            return "text-2xl";
+        case "sm":
+            return "text-4xl";
+        case "md":
+            return "text-6xl";
+        case "lg":
+            return "text-8xl";
+        case "xl":
+            return "text-9xl";
+        default:
+            return "text-4xl";
+    }
+}
+
+async function getAudioDuration(src: string): Promise<number> {
+    return new Promise((resolve) => {
+        const audio = new Audio(src);
+        audio.addEventListener("loadedmetadata", () => {
+            resolve(audio.duration * 1000);
+        });
+    });
+}
+
+async function getVideoDuration(src: string): Promise<number> {
+    return new Promise((resolve) => {
+        const video = document.createElement("video");
+        video.src = src;
+        video.addEventListener("loadedmetadata", () => {
+            resolve(video.duration * 1000);
+        });
+    });
 }

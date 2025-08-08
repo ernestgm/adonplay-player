@@ -7,8 +7,8 @@ const nextConfig: NextConfig = {
         remotePatterns: [
             {
                 protocol: 'http',
-                hostname: 'api-adonplay.local',
-                port: '', // or the port if your server is running on a specific port
+                hostname: 'adonplay-backend',
+                port: '9000', // or the port if your server is running on a specific port
                 pathname: '/uploads/**',
             },
         ],

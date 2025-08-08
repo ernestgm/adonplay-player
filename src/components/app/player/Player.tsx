@@ -4,36 +4,46 @@ import {TextLoading} from "@/components/ui/loadings/TextLoading";
 import {getDevice} from "@/server/api/devices";
 import {getDeviceID} from "@/server/api/auth";
 import {useError} from "@/context/ErrorContext";
-import {Slides} from "@/components/app/player/Slides";
+import Slides from "@/components/app/player/Slides";
+import {changeDeviceActionsChannel} from "@/websockets/channels/changeDeviceAtionsChannel";
 
 export default function Player() {
     const [loading, setLoading] = useState(true);
+    const deviceId = getDeviceID()
     const [slideMedias, setSlideMedias] = useState(null);
     const [error, setError] = useState('');
+    const [device, setDevice] = useState(null);
+    const [update, setUpdate] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await getDevice(getDeviceID());
+                const data = await getDevice(deviceId);
+                setDevice(data)
                 setSlideMedias(data.slide_medias)
-                console.log(data);
             } catch (err) {
                 setError(err.data?.message || err.message || "Server Error!!!");
             }
         };
 
         fetchData();
-    }, [])
+    }, [update])
+
+    changeDeviceActionsChannel(deviceId, async (data) => {
+        if (data.type === "ejecute_data_change") {
+            console.log(data);
+            setUpdate(data.payload)
+        }
+    })
 
     return (
         <div>
+            { slideMedias ? (
+                <Slides device={device} slideMedias={slideMedias} />
+            ) : (
             <div className="relative w-full h-screen flex flex-col justify-center">
                 <div className="relative items-center justify-center  flex z-1">
-                    { slideMedias ? (
-                        <Slides slideMedias={slideMedias} />
-                    ) : (
-                        <TextLoading label="Waiting Device's Slides"/>
-                    )}
+                    <TextLoading label="Waiting Device's Slides"/>
                 </div>
                 { error &&(
                         <div className="absolute bottom-0 w-full h-content text-center">
@@ -42,6 +52,8 @@ export default function Player() {
                     )
                 }
             </div>
+                )
+            }
         </div>
     );
 }
