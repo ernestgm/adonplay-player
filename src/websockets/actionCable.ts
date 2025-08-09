@@ -19,5 +19,23 @@ export const initializeActionCable = (deviceId) => {
     // Asegúrate de que la URL base sea correcta para tu entorno (desarrollo/producción)
     const cableUrl = `${process.env.NEXT_PUBLIC_RAILS_ACTION_CABLE_URL}?device_id=${deviceId}` || `ws://ws-adonplay.local/cable?device_id_id=${appId}`;
     consumer = createConsumer(cableUrl);
+
+    // Solo forzar reintento en desarrollo
+    if (process.env.NODE_ENV === "development") {
+        console.log("En develop");
+        const originalDisconnected = consumer.connection.disconnected;
+
+        consumer.connection.disconnected = function (...args) {
+            console.log("Cable desconectado (dev mode), reintentando...");
+            setTimeout(() => {
+                consumer.connect();
+            }, 2000);
+
+            if (typeof originalDisconnected === "function") {
+                originalDisconnected.apply(this, args);
+            }
+        };
+    }
+
     return consumer;
 };

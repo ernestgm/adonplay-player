@@ -9,7 +9,7 @@ export default function AdminLayout({children,}: {
     children: React.ReactNode;
 }) {
     return (
-        <div className="min-h-screen xl:flex">
+        <div className="min-h-screen min-w-screen">
             <div className="flex flex-col min-h-screen transition-all  duration-300 ease-in-out">
                 {/* Header */}
                 <AppHeader/>

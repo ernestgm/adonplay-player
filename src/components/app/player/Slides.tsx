@@ -20,7 +20,6 @@ export default function Slides({slideMedias, device}: SlidesProps) {
         setCurrentIndex(0)
         if (slideMedias) {
             const sorted = [...slideMedias].sort((a, b) => a.order - b.order);
-            console.log(sorted);
             setMediaList(sorted);
         }
     }, [slideMedias]);
@@ -37,6 +36,8 @@ export default function Slides({slideMedias, device}: SlidesProps) {
                 ? getVideoDuration(mediaUrl(current.media.file_path))
                 : current.duration * 1000;
 
+        current.audio_media && playAudio(mediaUrl(current.audio_media.file_path));
+
         let timer: NodeJS.Timeout;
         Promise.resolve(duration).then((ms) => {
             timer = setTimeout(() => {
@@ -52,7 +53,7 @@ export default function Slides({slideMedias, device}: SlidesProps) {
     return (
         <div className="relative w-full h-screen bg-black overflow-hidden flex flex-col">
             {current && (
-                <div className="w-full h-full flex basis-[80vw] relative">
+                <div className="w-full h-full flex relative">
                     {current.media.media_type === "image" ? (
                         <div>
                             <Image
@@ -84,20 +85,19 @@ export default function Slides({slideMedias, device}: SlidesProps) {
                             onEnded={() => setCurrentIndex((prev) => (prev + 1) % mediaList.length)}
                         />
                     )}
+                </div>
+            )}
+            {(current?.description || device?.slide?.description) && (
+                <div
+                    className={` absolute z-999999 ${getPositionClass((current?.description && current?.description_position) || device?.slide?.description_position || 'br')} ${getTextSizeClass((current?.description && current?.text_size) || device?.slide?.description_size || 'sm')} text-white p-3 m-3 bg-[#333] rounded-md`}>
+                    { current?.description || device?.slide?.description || ''}
+                </div>
+            )}
 
-                    {current.description && (
-                        <div
-                            className={` absolute z-999999 ${getPositionClass(current.description_position)} ${getTextSizeClass(current.text_size)} text-white p-3`}>
-                            {current.description}
-                        </div>
-                    )}
-
-                    {(current.qr || device.qr) && (
-                        <div
-                            className={` absolute z-999999 bg-amber-50 rounded-b-sm ${getPositionClass(current.qr?.position || device.qr?.position || 'br')} p-1 m-3 `}>
-                            <QRCodeCanvas value={current.qr?.info || device.qr?.info || ''} size={200}/>
-                        </div>
-                    )}
+            {(current?.qr || device?.qr) && (
+                <div
+                    className={` absolute z-999999 bg-amber-50 rounded-b-sm ${getPositionClass(current?.qr?.position || device?.qr?.position || 'br')} p-1 m-3 `}>
+                    <QRCodeCanvas value={current?.qr?.info || device?.qr?.info || ''} size={200}/>
                 </div>
             )}
             {device.marquee && (
@@ -108,7 +108,7 @@ export default function Slides({slideMedias, device}: SlidesProps) {
                         position: current?.media.media_type === "video" ? "absolute" : "sticky",
                         bottom: 0,
                     }}
-                    className={`w-full text-7xl overflow-hidden p-3 basis-[10vw] sticky uppercase`}
+                    className={`w-full text-8xl overflow-hidden p-4 sticky uppercase`}
                     speed={100}
                 >
                     {device.marquee.message}

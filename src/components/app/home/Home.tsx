@@ -50,7 +50,7 @@ export default function Home() {
     return (
         <div className="relative flex flex-col items-center justify-center p-6 overflow-hidden z-1">
             <GridShape />
-            <div className="mx-auto w-full max-w-[242px] text-center sm:max-w-[472px]">
+            <div className="mx-auto w-full max-w-content text-center">
                 {slide ? (
                         <h1 className="mb-8 font-bold text-gray-800 text-title-md dark:text-white/90 xl:text-title-2xl">
                             {`Loading Player: (${ deviceName })`}
