@@ -10,7 +10,7 @@ import {changeDeviceActionsChannel} from "@/websockets/channels/changeDeviceAtio
 export default function Player() {
     const [loading, setLoading] = useState(true);
     const deviceId = getDeviceID()
-    const [slideMedias, setSlideMedias] = useState(null);
+    const [slideMedias, setSlideMedias] = useState([]);
     const [error, setError] = useState('');
     const [device, setDevice] = useState(null);
     const [update, setUpdate] = useState(null);
@@ -38,12 +38,16 @@ export default function Player() {
 
     return (
         <div>
-            { slideMedias ? (
+            { device?.slide && slideMedias?.length > 0 ? (
                 <Slides device={device} slideMedias={slideMedias} />
             ) : (
             <div className="relative w-full h-screen flex flex-col justify-center">
                 <div className="relative items-center justify-center  flex z-1">
-                    <TextLoading label="Waiting Device's Slides"/>
+                    { !device?.slide ? (
+                        <TextLoading label="Waiting Device's Slides"/>
+                    ) : !slideMedias || slideMedias?.length === 0 && (
+                        <TextLoading label="Waiting Device's Slides Media Data"/>
+                    )}
                 </div>
                 { error &&(
                         <div className="absolute bottom-0 w-full h-content text-center">

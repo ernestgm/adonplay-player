@@ -36,8 +36,6 @@ export default function Slides({slideMedias, device}: SlidesProps) {
                 ? getVideoDuration(mediaUrl(current.media.file_path))
                 : current.duration * 1000;
 
-        current.audio_media && playAudio(mediaUrl(current.audio_media.file_path));
-
         let timer: NodeJS.Timeout;
         Promise.resolve(duration).then((ms) => {
             timer = setTimeout(() => {
