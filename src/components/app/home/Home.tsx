@@ -1,6 +1,6 @@
 "use client";
 import React, {useEffect, useState} from "react";
-import {getDataUserAuth, getDeviceID, getLoginCode, signIn} from "@/server/api/auth";
+import {getDataUserAuth, getDeviceID} from "@/server/api/auth";
 import {useError} from "@/context/ErrorContext";
 import {getDevice} from "@/server/api/devices";
 import GridShape from "@/components/common/GridShape";

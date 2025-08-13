@@ -59,6 +59,16 @@ export default function Slides({slideMedias, device}: SlidesProps) {
                                 alt="Cover"
                                 fill={true}
                                 objectFit="fill"
+                                quality={30}
+                                className="w-full h-full object-fill blur-3xl opacity-30"
+                                placeholder="blur"
+                                blurDataURL={imageUrl(current.media.file_path)}
+                            />
+                            <Image
+                                src={imageUrl(current.media.file_path)}
+                                alt="Cover"
+                                fill={true}
+                                objectFit="contain"
                                 quality={75}
                                 className="w-full h-full object-fill"
                                 placeholder="blur"
@@ -76,7 +86,7 @@ export default function Slides({slideMedias, device}: SlidesProps) {
                     ) : (
                         <video
                             src={mediaUrl(current.media.file_path)}
-                            className="w-full h-full object-fill"
+                            className="w-full h-full object-contain"
                             autoPlay
                             muted={true}
                             loop={isOnlyOne}

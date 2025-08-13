@@ -1,7 +1,7 @@
 "use client";
 
 import React, {useEffect, useState} from "react";
-import {getDeviceID, getLoginCode, signIn} from "@/server/api/auth";
+import {getDeviceID, getLoginCode, setUserCookies, signIn} from "@/server/api/auth";
 import Cookies from "js-cookie";
 import {useError} from "@/context/ErrorContext";
 import {QRCodeCanvas} from "qrcode.react";
@@ -20,7 +20,14 @@ export default function SignInForm() {
             try {
                 const deviceCode = Cookies.get("device_code");
                 const data = await getLoginCode(deviceId, deviceCode);
-                setCode(String(data?.code).split(""))
+                if (data?.token) {
+                    setUserCookies(data.token, JSON.stringify(data.user))
+                    const redirect = searchParams.get("redirect");
+                    router.push(redirect || "/");
+                } else {
+                    console.log(data);
+                    setCode(String(data?.code).split(""))
+                }
             } catch (err) {
                 setError(err.data?.message || err.message || "Error al iniciar sesión");
             }
@@ -30,7 +37,6 @@ export default function SignInForm() {
     }, []);
 
     useLoginActionsChannel(deviceId, async (data) => {
-        console.log(data);
         if (data.type === "ejecute_login") {
             try {
                 const response = await signIn(
@@ -38,8 +44,7 @@ export default function SignInForm() {
                     data.payload.device_id,
                     data.payload.user_id
                 )
-                Cookies.set("auth_token", response.token, { path: "/" });
-                Cookies.set("user", JSON.stringify(response.user), { path: "/" });
+                setUserCookies(response.token, JSON.stringify(response.user))
                 const redirect = searchParams.get("redirect");
                 router.push(redirect || "/");
             } catch (err) {
@@ -48,19 +53,6 @@ export default function SignInForm() {
 
         }
     })
-
-    function generateCodeHtml(code) {
-        // Ensure the code is a 6-digit string
-        const codeString = String(code).padStart(6, '0').slice(0, 6);
-
-        let spansHtml = '';
-        for (let i = 0; i < codeString.length; i++) {
-            const digit = codeString[i];
-            spansHtml += `<span class="text-4xl font-mono font-bold text-indigo-600 bg-indigo-50 px-4 py-2 rounded-lg border border-indigo-200">${digit}</span>`;
-        }
-
-        return `<div class="flex justify-center space-x-2">${spansHtml}</div>`;
-    }
 
     return (
         <div className="flex flex-col flex-1 lg:w-1/2 w-full">

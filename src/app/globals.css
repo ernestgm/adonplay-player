@@ -293,6 +293,9 @@
 }
 
 @layer components {
+  .rfm-child {
+    margin-left: 200px !important;
+  }
   .spinner {
     @apply w-[46px] h-[46px] grid;
     animation: spinner-plncf9 3s infinite;

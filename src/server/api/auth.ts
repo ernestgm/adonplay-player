@@ -38,6 +38,10 @@ export const signIn = async (code: string, device_id: string, user_id: string) =
     }
 };
 
+export const setUserCookies = (token: string, userData: string) => {
+    Cookies.set("auth_token", token, { path: "/" });
+    Cookies.set("user", userData, { path: "/" });
+}
 export const signOut = () => {
     Cookies.remove("auth_token");
     Cookies.remove("user");
