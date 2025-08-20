@@ -10,7 +10,7 @@ import {useRouter, useSearchParams} from "next/navigation";
 
 export default function SignInForm() {
     const deviceId = getDeviceID()
-    const [code, setCode] = useState([]);
+    const [code, setCode] = useState<string[]>([]);
     const setError = useError().setError;
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -28,7 +28,7 @@ export default function SignInForm() {
                     console.log(data);
                     setCode(String(data?.code).split(""))
                 }
-            } catch (err) {
+            } catch (err: any) {
                 setError(err.data?.message || err.message || "Error al iniciar sesión");
             }
         };
@@ -36,7 +36,7 @@ export default function SignInForm() {
         fetchData();
     }, []);
 
-    useLoginActionsChannel(deviceId, async (data) => {
+    useLoginActionsChannel(deviceId, async (data: any) => {
         if (data.type === "ejecute_login") {
             try {
                 const response = await signIn(
@@ -47,7 +47,7 @@ export default function SignInForm() {
                 setUserCookies(response.token, JSON.stringify(response.user))
                 const redirect = searchParams.get("redirect");
                 router.push(redirect || "/");
-            } catch (err) {
+            } catch (err: any) {
                 setError(err.data?.message || err.message || "Error al iniciar sesión");
             }
 
@@ -55,11 +55,11 @@ export default function SignInForm() {
     })
 
     return (
-        <div className="flex flex-col flex-1 lg:w-1/2 w-full">
-            <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
+        <div className="d-flex flex-fill justify-content-center p-5">
+            <div className="d-flex justify-content-center align-items-center">
                 <div>
-                    <div className="mb-5 sm:mb-8 flex flex-col items-center">
-                        <h1 className="mb-10 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
+                    <div className="d-flex flex-column justify-content-center">
+                        <h1 className="text-center">
                             Sign In
                         </h1>
 
@@ -67,26 +67,26 @@ export default function SignInForm() {
                             activate your
                             device.</p>
 
-                        <div className="mb-10">
+                        <div className="d-flex align-self-center mb-3">
                             <QRCodeCanvas
-                                value={process.env.NEXT_PUBLIC_ACTIVATE_DEVICE_URL}
-                                size={200}
+                                value={ process.env.NEXT_PUBLIC_ACTIVATE_DEVICE_URL || "" }
+                                size={150}
                             />
                         </div>
 
                         <div className="mb-6">
                             <p className="text-center text-gray-700 text-lg font-semibold mb-2">Activation Code</p>
-                            <div className="flex justify-center space-x-2">
+                            <div className="d-flex justify-content-center space-x-2">
                                 {
                                     code.map((digit, index) => {
                                     return (
-                                        <span key={index} className="text-4xl font-mono font-bold text-indigo-600 bg-indigo-50 px-4 py-2 rounded-lg border border-indigo-200">{digit}</span>
+                                        <span key={index} className="m-1 px-3 py-2 rounded-lg border rounded border-theme">{digit}</span>
                                         )
                                     })
                                 }
                             </div>
 
-                            <p className="text-center text-sm text-gray-500 mt-10">For assistance, please contact support.</p>
+                            <p className="text-center text-sm text-gray-500 mt-4">For assistance, please contact support.</p>
                         </div>
                     </div>
                 </div>

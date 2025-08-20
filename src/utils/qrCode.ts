@@ -1,5 +1,5 @@
 export default function handleDownloadQr()  {
-    const canvas = document.getElementById("qrcode-canvas");
+    const canvas: any | null = document.getElementById("qrcode-canvas");
     if (canvas) {
         const url = canvas.toDataURL("image/png");
         const a = document.createElement("a");

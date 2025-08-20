@@ -17,7 +17,7 @@ export const GlobalsActionCableListenersProvider: React.FC<{ children: React.Rea
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  changeUserActionsChannel(Cookies.get("device_id"), async (data) => {
+  changeUserActionsChannel(Cookies.get("device_id"), async (data: any) => {
     console.log(data);
     if (data.type === "change_user") {
       console.log(data);

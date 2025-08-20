@@ -44,7 +44,9 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      {children}
+      <div className="fullscreen">
+        {children}
+      </div>
     </ThemeContext.Provider>
   );
 };

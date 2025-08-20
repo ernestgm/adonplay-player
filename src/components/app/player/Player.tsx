@@ -3,16 +3,14 @@ import React, {useEffect, useState} from "react";
 import {TextLoading} from "@/components/ui/loadings/TextLoading";
 import {getDevice} from "@/server/api/devices";
 import {getDeviceID} from "@/server/api/auth";
-import {useError} from "@/context/ErrorContext";
 import Slides from "@/components/app/player/Slides";
 import {changeDeviceActionsChannel} from "@/websockets/channels/changeDeviceAtionsChannel";
 
 export default function Player() {
-    const [loading, setLoading] = useState(true);
     const deviceId = getDeviceID()
     const [slideMedias, setSlideMedias] = useState([]);
     const [error, setError] = useState('');
-    const [device, setDevice] = useState(null);
+    const [device, setDevice] = useState<any>(null);
     const [update, setUpdate] = useState(null);
 
     useEffect(() => {
@@ -21,7 +19,7 @@ export default function Player() {
                 const data = await getDevice(deviceId);
                 setDevice(data)
                 setSlideMedias(data.slide_medias)
-            } catch (err) {
+            } catch (err: any) {
                 setError(err.data?.message || err.message || "Server Error!!!");
             }
         };
@@ -29,7 +27,7 @@ export default function Player() {
         fetchData();
     }, [update])
 
-    changeDeviceActionsChannel(deviceId, async (data) => {
+    changeDeviceActionsChannel(deviceId, async (data: any) => {
         if (data.type === "ejecute_data_change") {
             console.log(data);
             setUpdate(data.payload)

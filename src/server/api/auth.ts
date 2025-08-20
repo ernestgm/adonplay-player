@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 import {apiPost} from "@/server/api/apiClient";
 
-export const getLoginCode = async (deviceId: string, code: string) => {
+export const getLoginCode = async (deviceId: string | undefined | null, code: string | undefined) => {
     try {
         const getAuthHeaders = () => {
             const token = Cookies.get("device_token");
@@ -15,7 +15,7 @@ export const getLoginCode = async (deviceId: string, code: string) => {
             true
         );
 
-    } catch (error) {
+    } catch (error: any) {
         throw {
             status: error.response?.status || 500,
             data: error.response?.data || "Failed to sign in.",
@@ -30,7 +30,7 @@ export const signIn = async (code: string, device_id: string, user_id: string) =
             {},
             true
         );
-    } catch (error) {
+    } catch (error: any) {
         throw {
             status: error.response?.status || 500,
             data: error.response?.data || "Failed to sign in.",
@@ -52,6 +52,6 @@ export const getDataUserAuth = () => {
     return userAuth ? JSON.parse(userAuth) : null;
 };
 
-export const getDeviceID = () => {
+export const getDeviceID = (): string | undefined | null => {
     return typeof window !== "undefined" ? Cookies.get("device_id") : null;
 };

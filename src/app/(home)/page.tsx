@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import Player from "@/components/app/player/Player";
 import Home from "@/components/app/home/Home";
 
 export const metadata: Metadata = {

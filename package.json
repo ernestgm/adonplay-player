@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3002 -H 0.0.0.0",
     "lint": "next lint"
   },
   "dependencies": {
@@ -21,8 +21,8 @@
     "@tailwindcss/forms": "^0.5.9",
     "@tailwindcss/postcss": "^4.0.9",
     "apexcharts": "^4.3.0",
-    "autoprefixer": "^10.4.20",
     "axios": "^1.10.0",
+    "bootstrap": "^5.3.7",
     "clsx": "^2.1.1",
     "flatpickr": "^4.6.13",
     "js-cookie": "^3.0.5",
@@ -42,14 +42,14 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@svgr/webpack": "^8.1.0",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
+    "@types/rails__actioncable": "^6.1.11",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-transition-group": "^4.4.12",
     "eslint": "^9",
     "eslint-config-next": "15.1.3",
-    "postcss": "^8",
-    "tailwindcss": "^4.0.0",
     "typescript": "^5"
   },
   "overrides": {

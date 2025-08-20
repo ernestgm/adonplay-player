@@ -1,14 +1,16 @@
-import type React from "react";
-import {useEffect, useRef} from "react";
+import React from 'react';
 
-interface LoadingProps {
-    size?: number; // en píxeles, opcional, por defecto 46
-}
-export const Loading: React.FC<LoadingProps> = ({size=46}) => {
+export const Loading = () => {
     return (
-        <div
-            className="spinner"
-            style={{ width: size, height: size }}
-        />
+        <div className="loader-container">
+            <div className="loader">
+                <div className="crystal"></div>
+                <div className="crystal"></div>
+                <div className="crystal"></div>
+                <div className="crystal"></div>
+                <div className="crystal"></div>
+                <div className="crystal"></div>
+            </div>
+        </div>
     );
-};
+}

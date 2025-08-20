@@ -1,6 +1,5 @@
 "use client";
 import React, {useEffect, useState} from "react";
-import {TextLoading} from "@/components/ui/loadings/TextLoading";
 import Image from "next/image";
 import {mediaUrl, imageUrl} from "@/utils/files";
 import {QRCodeCanvas} from "qrcode.react";

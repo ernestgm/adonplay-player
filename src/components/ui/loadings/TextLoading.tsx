@@ -10,7 +10,7 @@ export const TextLoading: React.FC<LoadingProps> = ({label = "loading", words = 
     return (
         <div className="spinnerContainer">
             <div className="mb-5">
-                <Loading size={60}/>
+                <Loading />
             </div>
             {words.length > 0 ? (
                 <div className="loader">
