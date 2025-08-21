@@ -4,6 +4,7 @@ import Image from "next/image";
 import {mediaUrl, imageUrl} from "@/utils/files";
 import {QRCodeCanvas} from "qrcode.react";
 import Marquee from "react-fast-marquee";
+import {Loading} from "@/components/ui/loadings/Loading";
 
 interface SlidesProps {
     device?: any
@@ -14,6 +15,7 @@ export default function Slides({slideMedias, device}: SlidesProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [mediaList, setMediaList] = useState<any[]>([]);
     const [isOnlyOne, setIsOnlyOne] = useState(true);
+    const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
         setCurrentIndex(0)
@@ -48,10 +50,10 @@ export default function Slides({slideMedias, device}: SlidesProps) {
     const current = mediaList[currentIndex];
 
     return (
-        <div className="relative w-full h-screen bg-black overflow-hidden flex flex-col">
-            {current && (
-                <div className="w-full h-full flex relative">
-                    {current.media.media_type === "image" ? (
+        <div className="position-relative w-100 h-100 d-flex flex-column bg-theme">
+            { current && (
+                <div className="w-full h-full flex-grow-1">
+                    { current.media.media_type === "image" ? (
                         <div>
                             <Image
                                 src={imageUrl(current.media.file_path)}
@@ -59,7 +61,7 @@ export default function Slides({slideMedias, device}: SlidesProps) {
                                 fill={true}
                                 objectFit="fill"
                                 quality={30}
-                                className="w-full h-full object-fill blur-3xl opacity-30"
+                                className="w-full h-full object-fill blur opacity-75"
                                 placeholder="blur"
                                 blurDataURL={imageUrl(current.media.file_path)}
                             />
@@ -83,28 +85,39 @@ export default function Slides({slideMedias, device}: SlidesProps) {
                             )}
                         </div>
                     ) : (
-                        <video
-                            src={mediaUrl(current.media.file_path)}
-                            className="w-full h-full object-contain"
-                            autoPlay
-                            muted={true}
-                            loop={isOnlyOne}
-                            onEnded={() => setCurrentIndex((prev) => (prev + 1) % mediaList.length)}
-                        />
+                        <div>
+                            <div className={`d-flex flex-column justify-content-center align-content-center position-absolute w-100 h-100 bg-theme ${ isLoaded ? "d-none" : ""}`}>
+                                <Loading />
+                            </div>
+                            <video
+                                poster="./images/video-thumb/thumb-16.png"
+                                src={mediaUrl(current.media.file_path)}
+                                className={`w-100 h-100 object-fit-contain`}
+                                autoPlay
+                                muted
+                                loop={isOnlyOne}
+                                onLoadStart={() => setIsLoaded(false)}
+                                onLoadedData={() => setIsLoaded(true)}
+                                onEnded={() =>
+                                    setCurrentIndex((prev) => (prev + 1) % mediaList.length)
+                                }
+                            />
+                        </div>
                     )}
                 </div>
             )}
+
             {(current?.description || device?.slide?.description) && (
                 <div
-                    className={` absolute z-999999 ${getPositionClass((current?.description && current?.description_position) || device?.slide?.description_position || 'br')} ${getTextSizeClass((current?.description && current?.text_size) || device?.slide?.description_size || 'sm')} text-white p-3 m-3 bg-[#333] rounded-md`}>
+                    className={` position-absolute z-999999 ${getPositionClass((current?.description && current?.description_position) || device?.slide?.description_position || 'br')} ${getTextSizeClass((current?.description && current?.text_size) || device?.slide?.description_size || 'sm')} text-white px-3 m-2 bg-theme rounded`}>
                     { current?.description || device?.slide?.description || ''}
                 </div>
             )}
 
             {(current?.qr || device?.qr) && (
                 <div
-                    className={` absolute z-999999 bg-amber-50 rounded-b-sm ${getPositionClass(current?.qr?.position || device?.qr?.position || 'br')} p-1 m-3 `}>
-                    <QRCodeCanvas value={current?.qr?.info || device?.qr?.info || ''} size={200}/>
+                    className={`d-flex position-absolute z-999999 bg-white rounded ${getPositionClass(current?.qr?.position || device?.qr?.position || 'br')} p-2 m-2 `}>
+                    <QRCodeCanvas value={current?.qr?.info || device?.qr?.info || ''} size={150}/>
                 </div>
             )}
             {device.marquee && (
@@ -112,10 +125,10 @@ export default function Slides({slideMedias, device}: SlidesProps) {
                     style={{
                         backgroundColor: device.marquee.background_color,
                         color: device.marquee.text_color,
-                        position: current?.media.media_type === "video" ? "absolute" : "sticky",
-                        bottom: 0,
+                        position: current?.media.media_type === "video" ? "absolute" : "relative",
+                        bottom: "0",
                     }}
-                    className={`w-full text-8xl overflow-hidden p-4 sticky uppercase`}
+                    className={`text-4xl overflow-hidden p-2`}
                     speed={100}
                 >
                     {device.marquee.message}
@@ -128,25 +141,25 @@ export default function Slides({slideMedias, device}: SlidesProps) {
 function getPositionClass(pos: string | null) {
     switch (pos) {
         case "tl":
-            return "left-0 top-0";
+            return "start-0 top-0";
         case "tc":
-            return "top-0 left-1/2 transform -translate-x-1/2";
+            return "top-0 start-50 -translate-x-middle";
         case "tr":
-            return "right-0 top-0";
+            return "end-0 top-0";
         case "ml":
-            return "top-1/2 left-0 transform -translate-y-1/2";
+            return "top-50 start-0 -translate-y-middle";
         case "mc":
-            return "left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2";
+            return "start-50 top-50 -translate-xy-middle";
         case "mr":
-            return "right-0 top-1/2 transform -translate-y-1/2";
+            return "end-0 top-50 -translate-y-middle";
         case "bl":
-            return "bottom-0 left-0";
+            return "bottom-0 start-0";
         case "bc":
-            return "bottom-0 left-1/2 transform -translate-x-1/2";
+            return "bottom-0 start-50 -translate-x-middle";
         case "br":
-            return "bottom-0 right-0";
+            return "bottom-0 end-0";
         default:
-            return "bottom-0 right-0";
+            return "bottom-0 end-0";
     }
 }
 

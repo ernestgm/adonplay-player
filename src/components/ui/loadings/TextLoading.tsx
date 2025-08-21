@@ -24,7 +24,7 @@ export const TextLoading: React.FC<LoadingProps> = ({label = "loading", words = 
                     </div>
                 </div>
             ) : (
-                <p className="uppercase text-title-md text-[#777]">{label}</p>
+                <p className="text-4xl">{label}</p>
             )
             }
         </div>

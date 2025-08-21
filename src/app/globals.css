@@ -388,4 +388,69 @@ html, body {
   }
 }
 
+/* Filters */
 
+.blur {
+  filter: blur(30px);
+}
+
+/* Text Sizes */
+.text-2xl {
+  font-size: 1.5rem;
+}
+.text-4xl {
+  font-size: 2rem;
+}
+.text-6xl {
+  font-size: 3rem;
+}
+.text-8xl {
+  font-size: 4rem;
+}
+.text-9xl {
+  font-size: 5rem;
+}
+
+/* Z-indexs */
+
+.z-1 {
+  z-index: var(--z-index-1);
+}
+.z-9 {
+  z-index: var(--z-index-9);
+}
+.z-99 {
+  z-index: var(--z-index-99);
+}
+.z-999 {
+  z-index: var(--z-index-999);
+}
+.z-9999 {
+  z-index: var(--z-index-9999);
+}
+.z-99999 {
+  z-index: var(--z-index-99999);
+}
+.z-999999 {
+  z-index: var(--z-index-999999);
+}
+
+.left-middle {
+  left: 50%;
+}
+
+.top-middle {
+  top: 50%;
+}
+
+.-translate-xy-middle {
+  transform: translate(-50%, -50%);
+}
+
+.-translate-x-middle {
+  transform: translate(-50%, 0);
+}
+
+.-translate-y-middle {
+  transform: translate(0, -50%);
+}

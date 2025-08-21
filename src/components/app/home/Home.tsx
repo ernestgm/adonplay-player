@@ -7,23 +7,29 @@ import GridShape from "@/components/common/GridShape";
 import { Loading } from "@/components/ui/loadings/Loading";
 import {useRouter} from "next/navigation";
 import {changeDeviceActionsChannel} from "@/websockets/channels/changeDeviceAtionsChannel";
+import {TextLoading} from "@/components/ui/loadings/TextLoading";
 
 
 export default function Home() {
     const deviceId = getDeviceID()
     const [deviceName, setDeviceName] = useState('');
     const [slide, setSlide] = useState(null);
+    const [slideMedias, setSlideMedias] = useState([]);
     const setError = useError().setError;
     const router = useRouter();
+    const [update, setUpdate] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const data = await getDevice(deviceId);
                 setDeviceName(data.name || deviceId)
+                setSlide(data.slide)
+                setSlideMedias(data.slide_medias)
                 if (data?.slide) {
-                    setSlide(data.slide)
-                    router.push(`/player`)
+                    if (data?.slide_medias?.length > 0) {
+                        router.push(`/player`)
+                    }
                 }
                 console.log(data);
             } catch (err: any) {
@@ -32,15 +38,11 @@ export default function Home() {
         };
 
         fetchData();
-    }, [])
+    }, [update])
 
     changeDeviceActionsChannel(deviceId, async (data: any) => {
-        if (data.type === "ejecute_slide_change") {
-            if (data?.payload?.device?.slide) {
-                setSlide(data.payload.device.slide)
-                setDeviceName(data.payload.device.name || deviceId)
-                router.push(`/player`)
-            }
+        if (data.type === "ejecute_data_change") {
+            setUpdate(data.payload)
             console.log(data);
         }
     })
@@ -49,10 +51,16 @@ export default function Home() {
         <div className="d-flex flex-column flex-fill justify-content-center align-content-center p-5">
             <GridShape />
             <div className="mx-auto w-full max-w-content text-center">
-                {slide ? (
-                        <h1 className="mb-8 font-bold text-gray-800 text-title-md dark:text-white/90 xl:text-title-2xl">
-                            {`Loading Player: (${ deviceName })`}
-                        </h1>
+                { slide ? (
+                    slideMedias?.length === 0 ? (
+                            <h1 className="mb-8 font-bold text-gray-800 text-title-md dark:text-white/90 xl:text-title-2xl">
+                                {`Waiting Device's Slides Media Data: (${ deviceName })`}
+                            </h1>
+                        ) : (
+                            <h1 className="mb-8 font-bold text-gray-800 text-title-md dark:text-white/90 xl:text-title-2xl">
+                                {`Loading Player: (${ deviceName })`}
+                            </h1>
+                        )
                 ) :
                     (
                     <h1 className="mb-8 font-bold text-gray-800 text-title-md dark:text-white/90 xl:text-title-2xl">

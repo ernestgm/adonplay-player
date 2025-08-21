@@ -9,7 +9,7 @@ export default function AuthLayout({children}: { children: React.ReactNode; }) {
     return (
         <div className="h-100 d-flex flex-row bd-highlight h-">
             <ThemeProvider>
-                <div className="d-flex flex-row">
+                <div className="h-100 d-flex flex-row">
                     {children}
                     <div className="d-flex flex-fill justify-content-center p-5 bg-theme">
                         <div className="d-flex justify-content-center">
