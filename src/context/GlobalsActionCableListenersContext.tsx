@@ -5,6 +5,7 @@ import {useRouter, useSearchParams} from "next/navigation";
 import {changeUserActionsChannel} from "@/websockets/channels/changeUserAtionsChannel";
 import Cookies from "js-cookie";
 import {signOut} from "@/server/api/auth";
+import {Loading} from "@/components/ui/loadings/Loading";
 
 interface GlobalsActionCableListenersContextProps {
   message: string | null;
@@ -15,17 +16,19 @@ const GlobalsActionCableListenersContext = createContext<GlobalsActionCableListe
 
 export const GlobalsActionCableListenersProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const [switchUser, setSwitchUser] = useState(false);
 
   changeUserActionsChannel(Cookies.get("device_id"), async (data: any) => {
     console.log(data);
     if (data.type === "change_user") {
+      setSwitchUser(true);
       console.log(data);
       signOut()
       router.push("/");
     }
 
     if (data.type === "user_logout_action") {
+      setSwitchUser(true);
       console.log(data);
       signOut()
       router.push("/");
@@ -34,6 +37,12 @@ export const GlobalsActionCableListenersProvider: React.FC<{ children: React.Rea
 
   return (
     <GlobalsActionCableListenersContext.Provider value={undefined}>
+      {/*{ switchUser ? (*/}
+      {/*    <Loading />*/}
+      {/*) : (*/}
+      {/*    children*/}
+      {/*    )*/}
+      {/*}*/}
       {children}
     </GlobalsActionCableListenersContext.Provider>
   );

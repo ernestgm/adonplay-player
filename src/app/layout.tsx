@@ -1,28 +1,29 @@
 "use client";
 
-import { Outfit } from 'next/font/google';
+import {Outfit} from 'next/font/google';
 import './globals.css';
 
-import { SidebarProvider } from '@/context/SidebarContext';
-import { ThemeProvider } from '@/context/ThemeContext';
+import {SidebarProvider} from '@/context/SidebarContext';
+import {ThemeProvider} from '@/context/ThemeContext';
 import {ErrorProvider} from "@/context/ErrorContext";
 import {Suspense, useEffect} from "react";
 
 const outfit = Outfit({
-  subsets: ["latin"],
+    subsets: ["latin"],
 });
 
 export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
+                                       children,
+                                   }: Readonly<{
+    children: React.ReactNode;
 }>) {
 
     useEffect(() => {
         const setAppHeight = () => {
+            console.log("Windows height", window.outerHeight)
             document.documentElement.style.setProperty(
                 "--app-height",
-                `${window.innerHeight}px`
+                `${window.outerHeight}px`
             )
         }
         setAppHeight()
@@ -30,22 +31,22 @@ export default function RootLayout({
         return () => window.removeEventListener("resize", setAppHeight)
     }, [])
 
-  return (
-    <html lang="en">
-    <head>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-    </head>
-    <body className={`${outfit.className} dark:bg-gray-900`}>
-    <ThemeProvider>
-    <SidebarProvider>
-            <ErrorProvider>
-              <Suspense>
-                {children}
-              </Suspense>
-            </ErrorProvider>
-          </SidebarProvider>
+    return (
+        <html lang="en">
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+        </head>
+        <body className={`${outfit.className} dark:bg-gray-900`}>
+        <ThemeProvider>
+            <SidebarProvider>
+                <ErrorProvider>
+                    <Suspense>
+                        {children}
+                    </Suspense>
+                </ErrorProvider>
+            </SidebarProvider>
         </ThemeProvider>
-      </body>
-    </html>
-  );
+        </body>
+        </html>
+    );
 }

@@ -11,10 +11,11 @@ const AppHeader: React.FC = () => {
             <div className="container d-flex justify-content-between">
                 <Image
                                             className="navbar-brand d-flex align-items-center"
-                                            src="/images/logo/logo.svg"
+                                            src="/images/logo/logo.png"
                                             alt="Logo"
-                                            width={150}
-                                            height={40}
+                                            objectFit={"contain"}
+                                            width={120}
+                                            height={50}
                                         />
                 <UserDropdown/>
             </div>

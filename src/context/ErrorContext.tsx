@@ -17,7 +17,7 @@ export const ErrorProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         <Snackbar
           message={error}
           variant="error"
-          duration={5000}
+          duration={20000}
           onClose={() => setError(null)}
         />
       )}
