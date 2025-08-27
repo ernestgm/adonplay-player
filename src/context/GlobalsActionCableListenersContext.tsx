@@ -37,12 +37,6 @@ export const GlobalsActionCableListenersProvider: React.FC<{ children: React.Rea
 
   return (
     <GlobalsActionCableListenersContext.Provider value={undefined}>
-      {/*{ switchUser ? (*/}
-      {/*    <Loading />*/}
-      {/*) : (*/}
-      {/*    children*/}
-      {/*    )*/}
-      {/*}*/}
       {children}
     </GlobalsActionCableListenersContext.Provider>
   );
