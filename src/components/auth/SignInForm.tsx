@@ -78,7 +78,7 @@ export default function SignInForm() {
 
                             <div className="d-flex align-self-center mb-3">
                                 <QRCodeCanvas
-                                    value={ process.env.NEXT_PUBLIC_ACTIVATE_DEVICE_URL || "" }
+                                    value={ process.env.NEXT_PUBLIC_PLAYER_ACTIVATE_DEVICE_URL || "" }
                                     size={150}
                                 />
                             </div>

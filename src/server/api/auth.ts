@@ -9,7 +9,7 @@ export const getLoginCode = async (deviceId: string | undefined | null, code: st
         };
 
         return await apiPost(
-            `${process.env.NEXT_PUBLIC_API_URL}/create_login_code`,
+            `${process.env.NEXT_PUBLIC_PLAYER_API_URL}/create_login_code`,
             {'device_id': deviceId, 'code': code},
             getAuthHeaders(),
             true
@@ -25,7 +25,7 @@ export const getLoginCode = async (deviceId: string | undefined | null, code: st
 export const signIn = async (code: string, device_id: string, user_id: string) => {
     try {
         return await apiPost(
-            `${process.env.NEXT_PUBLIC_API_URL}/login_device`,
+            `${process.env.NEXT_PUBLIC_PLAYER_API_URL}/login_device`,
             {code: code, device_id: device_id, user_id: user_id },
             {},
             true

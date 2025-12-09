@@ -4,7 +4,7 @@ import React from "react";
 import {Metadata} from "next";
 
 export const metadata: Metadata = {
-    title: `Not Found | ${process.env.NAME_PAGE}`,
+    title: `Not Found | ${process.env.NEXT_PUBLIC_PLAYER_NAME_PAGE}`,
     description: "This is Not Found Page",
 };
 export default function NotFound() {

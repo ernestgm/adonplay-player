@@ -2,7 +2,7 @@ import {apiGet} from "@/server/api/apiClient";
 
 export const getDevice = async (deviceId: any) => {
   try {
-    return await apiGet(`${process.env.NEXT_PUBLIC_API_URL}/show_by_device_id/${deviceId}`);
+    return await apiGet(`${process.env.NEXT_PUBLIC_PLAYER_API_URL}/show_by_device_id/${deviceId}`);
   } catch (error: any) {
     throw {
       status: error.response?.status || 500,
@@ -12,7 +12,7 @@ export const getDevice = async (deviceId: any) => {
 };
 export const fetchDevices = async () => {
   try {
-    return await apiGet(`${process.env.NEXT_PUBLIC_API_URL}/devices`);
+    return await apiGet(`${process.env.NEXT_PUBLIC_PLAYER_API_URL}/devices`);
   } catch (error: any) {
     throw {
       status: error.response?.status || 500,

@@ -1,5 +1,5 @@
-const FILE_BASE_URL = process.env.NEXT_PUBLIC_UPLOAD_BASE_URL || "/";
-const IMAGE_BASE_URL = process.env.NEXT_PUBLIC_UPLOAD_IMAGE_URL || "/";
+const FILE_BASE_URL = process.env.NEXT_PUBLIC_PLAYER_UPLOAD_BASE_URL || "/";
+const IMAGE_BASE_URL = process.env.NEXT_PUBLIC_PLAYER_UPLOAD_IMAGE_URL || "/";
 
 export const mediaUrl = (file_path: string) => {
     console.log(FILE_BASE_URL + file_path)

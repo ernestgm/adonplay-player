@@ -1,7 +1,5 @@
 import type {NextConfig} from "next";
 
-const imagesServer = process.env.NEXT_PUBLIC_UPLOAD_BASE_URL || "localhost";
-
 const nextConfig: NextConfig = {
     images: {
         remotePatterns: [
@@ -20,7 +18,7 @@ const nextConfig: NextConfig = {
         ],
 
     },
-    allowedDevOrigins: ['10.0.2.2', 'player-adonplay.local'],
+    allowedDevOrigins: ['10.0.2.2', 'player-adonplay.local', 'localhost'],
     /* config options here */
     webpack(config) {
         config.module.rules.push({
