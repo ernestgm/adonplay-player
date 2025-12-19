@@ -1,5 +1,5 @@
 "use client";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import Image from "next/image";
 import {mediaUrl, imageUrl} from "@/utils/files";
 import {QRCodeCanvas} from "qrcode.react";
@@ -31,23 +31,69 @@ export default function Slides({slideMedias, device}: SlidesProps) {
         setIsOnlyOne(mediaList.length === 1);
 
         const current = mediaList[currentIndex];
-        const duration = current.audio_media
-            ? getAudioDuration(mediaUrl(current.audio_media.file_path))
-            : current.media.media_type === "video"
-                ? getVideoDuration(mediaUrl(current.media.file_path))
-                : current.duration * 1000;
+        let isCanceled = false;
+
+        async function scheduleNext() {
+            let ms: number = current.duration * 1000;
+            try {
+                if (current.audio_media) {
+                    const url = await mediaUrl(current.audio_media.file_path);
+                    ms = await getAudioDuration(url);
+                } else if (current.media.media_type === "video") {
+                    const url = await mediaUrl(current.media.file_path);
+                    ms = await getVideoDuration(url);
+                }
+            } catch (e) {
+                // fallback to provided duration
+            }
+            if (!isCanceled) {
+                timer = setTimeout(() => {
+                    setCurrentIndex((prev) => (prev + 1) % mediaList.length);
+                }, ms);
+            }
+        }
 
         let timer: NodeJS.Timeout;
-        Promise.resolve(duration).then((ms) => {
-            timer = setTimeout(() => {
-                setCurrentIndex((prev) => (prev + 1) % mediaList.length);
-            }, ms);
-        });
+        scheduleNext();
 
-        return () => clearTimeout(timer);
+        return () => {
+            isCanceled = true;
+            if (timer) clearTimeout(timer);
+        };
     }, [currentIndex, mediaList]);
 
     const current = mediaList[currentIndex];
+
+    // Resolve current media URLs from Firebase Storage when needed
+    const [resolvedImage, setResolvedImage] = useState<string>("/images/grid-image/image-01.png");
+    const [resolvedVideo, setResolvedVideo] = useState<string>("");
+    const [resolvedAudio, setResolvedAudio] = useState<string>("");
+
+    useEffect(() => {
+        if (!current) return;
+        let active = true;
+        async function run() {
+            try {
+                if (current.media.media_type === "image") {
+                    const url = await imageUrl(current.media.file_path);
+                    if (active) setResolvedImage(url);
+                } else if (current.media.media_type === "video") {
+                    const url = await mediaUrl(current.media.file_path);
+                    if (active) setResolvedVideo(url);
+                }
+                if (current.audio_media) {
+                    const urlA = await mediaUrl(current.audio_media.file_path);
+                    if (active) setResolvedAudio(urlA);
+                } else {
+                    if (active) setResolvedAudio("");
+                }
+            } catch (e) {
+                // ignore, will fall back to legacy URLs in JSX
+            }
+        }
+        run();
+        return () => { active = false; };
+    }, [current]);
 
     return (
         <div className="position-relative w-100 h-100 d-flex flex-column bg-theme">
@@ -56,29 +102,29 @@ export default function Slides({slideMedias, device}: SlidesProps) {
                     { current.media.media_type === "image" ? (
                         <div>
                             <Image
-                                src={imageUrl(current.media.file_path)}
+                                src={resolvedImage}
                                 alt="Cover"
                                 fill={true}
-                                objectFit="fill"
                                 quality={30}
-                                className="w-full h-full object-fill blur opacity-75"
+                                className="w-full h-full object-fit-fill blur opacity-75"
+                                priority
                                 placeholder="blur"
-                                blurDataURL={imageUrl(current.media.file_path)}
+                                blurDataURL={resolvedImage}
                             />
                             <Image
-                                src={imageUrl(current.media.file_path)}
+                                src={resolvedImage}
                                 alt="Cover"
                                 fill={true}
-                                objectFit="contain"
                                 quality={75}
-                                className="w-full h-full object-fill"
+                                className="w-full h-full object-fit-contain"
+                                priority
                                 placeholder="blur"
-                                blurDataURL={imageUrl(current.media.file_path)}
+                                blurDataURL={resolvedImage}
                             />
 
                             {current.audio_media && (
                                 <audio
-                                    src={mediaUrl(current.audio_media.file_path)}
+                                    src={resolvedAudio}
                                     autoPlay
                                     loop={isOnlyOne}
                                 />
@@ -91,7 +137,7 @@ export default function Slides({slideMedias, device}: SlidesProps) {
                             </div>
                             <video
                                 poster="./images/video-thumb/thumb-16.png"
-                                src={mediaUrl(current.media.file_path)}
+                                src={resolvedVideo}
                                 className={`w-100 h-100 object-fit-contain`}
                                 autoPlay
                                 muted

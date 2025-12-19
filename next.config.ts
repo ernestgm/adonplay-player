@@ -15,6 +15,17 @@ const nextConfig: NextConfig = {
                 port: '9000', // or the port if your server is running on a specific port
                 pathname: '/uploads/**',
             },
+            // Firebase Storage download URLs
+            {
+                protocol: 'https',
+                hostname: 'firebasestorage.googleapis.com',
+                pathname: '/v0/b/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'storage.googleapis.com',
+                pathname: '/**',
+            },
         ],
 
     },
