@@ -14,15 +14,10 @@ async function getStorageLazy() {
 // Simple in-memory cache for resolved Firebase URLs
 const urlCache = new Map<string, string>();
 
-// Determine if we should resolve via Firebase (no absolute http(s) and storage bucket configured)
-const shouldUseFirebase = (path: string) => {
-    if (!path) return false;
-    return !/^https?:\/\//i.test(path);
-};
-
 export async function mediaUrl(file_path: string): Promise<string> {
     if (!file_path) return "";
-    if (!shouldUseFirebase(file_path)) return file_path; // already a URL
+    // If it's already an absolute URL (http/https), just return it
+    if (/^https?:\/\//i.test(file_path)) return file_path;
     if (urlCache.has(file_path)) return urlCache.get(file_path)!;
     const { ref, getDownloadURL, storage } = await getStorageLazy();
     const r = ref(storage, file_path);

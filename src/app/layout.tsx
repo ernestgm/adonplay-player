@@ -31,6 +31,26 @@ export default function RootLayout({
         return () => window.removeEventListener("resize", setAppHeight)
     }, [])
 
+    // Register Service Worker for media caching
+    useEffect(() => {
+        if (typeof window === 'undefined' || !('serviceWorker' in navigator)) return;
+        console.log('Registering SW...');
+        const register = async () => {
+            try {
+                await navigator.serviceWorker.register('/sw.js', { scope: '/' });
+            } catch (e) {
+                console.warn('SW registration failed', e);
+            }
+        };
+        // Delay registration until app idle to avoid competing with critical resources
+        if ('requestIdleCallback' in window) {
+            // @ts-ignore
+            window.requestIdleCallback(register);
+        } else {
+            setTimeout(register, 0);
+        }
+    }, [])
+
     return (
         <html lang="en">
         <head>
