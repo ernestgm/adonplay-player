@@ -44,7 +44,6 @@ export default function RootLayout({
         };
         // Delay registration until app idle to avoid competing with critical resources
         if ('requestIdleCallback' in window) {
-            // @ts-ignore
             window.requestIdleCallback(register);
         } else {
             setTimeout(register, 0);
