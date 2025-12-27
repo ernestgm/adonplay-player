@@ -147,6 +147,7 @@ export default function Slides({slideMedias, device}: SlidesProps) {
                                 onEnded={() =>
                                     setCurrentIndex((prev) => (prev + 1) % mediaList.length)
                                 }
+                                preload="metadata"
                             />
                         </div>
                     )}
