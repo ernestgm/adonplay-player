@@ -6,6 +6,7 @@ import {QRCodeCanvas} from "qrcode.react";
 import Marquee from "react-fast-marquee";
 import {Loading} from "@/components/ui/loadings/Loading";
 import ReactPlayer from "react-player";
+import VideoPlayer from "@/components/videos/VideoPlayer";
 
 interface SlidesProps {
     device?: any
@@ -136,43 +137,11 @@ export default function Slides({slideMedias, device}: SlidesProps) {
                             <div className={`d-flex flex-column justify-content-center align-content-center position-absolute w-100 h-100 bg-theme ${ isLoaded ? "d-none" : ""}`}>
                                 <Loading />
                             </div>
-                            <ReactPlayer
-                                src={resolvedVideo} // Tu URL de Firebase
-                                controls={false}
-                                playing={true}
-                                muted={true}
+                            <VideoPlayer
+                                src={resolvedVideo}
+                                onLoaded={() => setIsLoaded(true)}
                                 loop={isOnlyOne}
-                                width='100%'
-                                height='100%'
-                                config={{
-                                    html: {
-                                        attributes: {
-                                            preload: 'metadata', // Importante para TV Box
-                                            controlsList: 'nodownload'
-                                        }
-                                    }
-                                }}
-                                onEnded={() =>
-                                    setCurrentIndex((prev) => (prev + 1) % mediaList.length)
-                                }
-                                onLoadStart={() => setIsLoaded(false)}
-                                onLoadedData={() => setIsLoaded(true)}
-                                onError={(e) => console.log("Error al cargar video:", e)}
                             />
-                            {/*<video*/}
-                            {/*    poster="./images/video-thumb/thumb-16.png"*/}
-                            {/*    src={resolvedVideo}*/}
-                            {/*    className={`w-100 h-100 object-fit-contain`}*/}
-                            {/*    autoPlay*/}
-                            {/*    muted*/}
-                            {/*    loop={isOnlyOne}*/}
-                            {/*    onLoadStart={() => setIsLoaded(false)}*/}
-                            {/*    onLoadedData={() => setIsLoaded(true)}*/}
-                            {/*    onEnded={() =>*/}
-                            {/*        setCurrentIndex((prev) => (prev + 1) % mediaList.length)*/}
-                            {/*    }*/}
-                            {/*    preload="metadata"*/}
-                            {/*/>*/}
                         </div>
                     )}
                 </div>

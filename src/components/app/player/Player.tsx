@@ -45,7 +45,11 @@ export default function Player() {
     return (
         <div className="h-100 d-flex flex-column flex-fill justify-content-center align-content-center">
             { loading ? (
-                <TextLoading label="Updating Device Data..."/>
+                <div className="relative w-100 h-100 flex flex-col justify-center">
+                    <div className="w-100 h-100 d-flex flex-column flex-fill justify-content-center align-content-center">
+                        <TextLoading label="Updating Device Data..."/>
+                    </div>
+                </div>
             ) : (
                 device?.slide && slideMedias?.length > 0 ? (
                     <Slides device={device} slideMedias={slideMedias} />
