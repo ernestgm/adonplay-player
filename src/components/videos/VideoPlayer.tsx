@@ -4,8 +4,9 @@ interface IVideoPlayer {
     src: string | null | undefined;
     onLoaded?: () => void;
     loop?: boolean;
+    posterUrl?: string;
 }
-export default function VideoPlayer({src, onLoaded, loop}: IVideoPlayer) {
+export default function VideoPlayer({src, onLoaded, loop, posterUrl}: IVideoPlayer) {
     if (!src) {
         return <p>No video available.</p>; // Or null, or a placeholder
     }
@@ -13,6 +14,7 @@ export default function VideoPlayer({src, onLoaded, loop}: IVideoPlayer) {
         <div className="overflow-hidden rounded-lg w-100 h-100 bg-black">
             <video
                 src={src || undefined}
+                poster={posterUrl || undefined}
                 controls={false}
                 autoPlay={true}
                 muted={true}

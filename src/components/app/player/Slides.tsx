@@ -67,7 +67,7 @@ export default function Slides({slideMedias, device}: SlidesProps) {
     const current = mediaList[currentIndex];
 
     // Resolve current media URLs from Firebase Storage when needed
-    const [resolvedImage, setResolvedImage] = useState<string>("/images/grid-image/image-01.png");
+    const [resolvedImage, setResolvedImage] = useState<string>("/images/logo/placeholder.jpg");
     const [resolvedVideo, setResolvedVideo] = useState<string>("");
     const [resolvedAudio, setResolvedAudio] = useState<string>("");
 
@@ -100,15 +100,15 @@ export default function Slides({slideMedias, device}: SlidesProps) {
     return (
         <div className="position-relative w-100 h-100 d-flex flex-column bg-theme">
             { current && (
-                <div className="w-full h-full flex-grow-1">
+                <div className="position-relative flex-grow-1">
                     { current.media.media_type === "image" ? (
                         <div>
                             <Image
                                 src={resolvedImage}
                                 alt="Cover"
                                 fill={true}
-                                quality={30}
-                                className="w-full h-full object-fit-fill blur opacity-75"
+                                quality={10}
+                                className="object-fit-fill blur opacity-75"
                                 priority
                                 placeholder="blur"
                                 blurDataURL={resolvedImage}
@@ -118,7 +118,7 @@ export default function Slides({slideMedias, device}: SlidesProps) {
                                 alt="Cover"
                                 fill={true}
                                 quality={75}
-                                className="w-full h-full object-fit-contain"
+                                className="object-fit-contain"
                                 priority
                                 placeholder="blur"
                                 blurDataURL={resolvedImage}
@@ -141,6 +141,7 @@ export default function Slides({slideMedias, device}: SlidesProps) {
                                 src={resolvedVideo}
                                 onLoaded={() => setIsLoaded(true)}
                                 loop={isOnlyOne}
+                                posterUrl="/images/logo/placeholder.jpg"
                             />
                         </div>
                     )}
@@ -167,8 +168,9 @@ export default function Slides({slideMedias, device}: SlidesProps) {
                         color: device.marquee.text_color,
                         position: current?.media.media_type === "video" ? "absolute" : "relative",
                         bottom: "0",
+                        fontSize: "3em",
                     }}
-                    className={`text-4xl overflow-hidden p-2`}
+                    className={`overflow-hidden p-1`}
                     speed={100}
                 >
                     {device.marquee.message}
