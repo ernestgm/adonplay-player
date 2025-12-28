@@ -20,7 +20,13 @@ export default function VideoPlayer({src, onLoaded, loop}: IVideoPlayer) {
                 preload="metadata"
                 className="w-100 fullscreen"
                 onLoadedData={onLoaded} // Se dispara cuando el video está listo
-                onError={(e) => console.log("Fallo en TV Box")}
+                onError={(e) => {
+                    const error = e.currentTarget.error;
+                    if (error) {
+                        console.error(error);
+                        }
+                    console.log("Fallo en TV Box")
+                }}
             >
                 Tu navegador no soporta el reproductor de video.
             </video>
