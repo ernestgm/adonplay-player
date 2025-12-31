@@ -2,7 +2,7 @@
 import { createConsumer } from "@rails/actioncable";
 import Cookies from "js-cookie";
 
-let deviceId= Cookies.get("device_id");
+const deviceId= Cookies.get("device_id");
 const cableUrl = `${process.env.NEXT_PUBLIC_PLAYER_RAILS_ACTION_CABLE_URL}?device_id=${deviceId}` || `ws://ws-adonplay.local/cable?device_id_id=${deviceId}`;
 const cable = createConsumer(cableUrl);
 export default cable;
