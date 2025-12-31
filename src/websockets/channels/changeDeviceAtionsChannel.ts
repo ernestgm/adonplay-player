@@ -1,10 +1,9 @@
 import { useEffect } from "react";
-import {initializeActionCable} from "@/websockets/actionCable";
+import cable from "@/websockets/actionCable";
 
 export function changeDeviceActionsChannel(deviceId: any, onReceived: any) {
     useEffect(() => {
         if (!deviceId) return;
-        const cable = initializeActionCable(deviceId)
         const subscription = cable.subscriptions.create(
             { channel: "ChangeDevicesActionsChannel", device_id: deviceId },
             {
