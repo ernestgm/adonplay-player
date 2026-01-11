@@ -3,10 +3,11 @@ import React from "react";
 interface IVideoPlayer {
     src: string | null | undefined;
     onLoaded?: () => void;
+    onNext?: () => void;
     loop?: boolean;
     posterUrl?: string;
 }
-export default function VideoPlayer({src, onLoaded, loop, posterUrl}: IVideoPlayer) {
+export default function VideoPlayer({src, onLoaded, loop, posterUrl, onNext}: IVideoPlayer) {
     if (!src) {
         return <p>No video available.</p>; // Or null, or a placeholder
     }
@@ -28,7 +29,11 @@ export default function VideoPlayer({src, onLoaded, loop, posterUrl}: IVideoPlay
                         console.error(error);
                         }
                     console.log("Fallo en TV Box")
+                    if (onNext) {
+                        onNext()
+                    }
                 }}
+                onPause={onNext}
             >
                 Tu navegador no soporta el reproductor de video.
             </video>

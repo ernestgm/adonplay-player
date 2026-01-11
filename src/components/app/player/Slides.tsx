@@ -142,6 +142,7 @@ export default function Slides({slideMedias, device}: SlidesProps) {
                                 onLoaded={() => setIsLoaded(true)}
                                 loop={isOnlyOne}
                                 posterUrl="/images/logo/placeholder.jpg"
+                                onNext={() => setCurrentIndex((prev) => (prev + 1) % mediaList.length)}
                             />
                         </div>
                     )}
