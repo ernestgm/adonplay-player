@@ -1,4 +1,10 @@
 // src/polyfills.js
+
+// 1. Polyfill para Shadow DOM y Web Components
+if (typeof window !== 'undefined' && !('attachShadow' in Element.prototype)) {
+    import('@webcomponents/webcomponentsjs/webcomponents-bundle.js');
+}
+
 import 'abortcontroller-polyfill/dist/abortcontroller-polyfill-only';
 
 if (typeof globalThis === 'undefined') {
