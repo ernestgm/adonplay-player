@@ -7,7 +7,6 @@ import {SidebarProvider} from '@/context/SidebarContext';
 import {ThemeProvider} from '@/context/ThemeContext';
 import {ErrorProvider} from "@/context/ErrorContext";
 import {Suspense, useEffect} from "react";
-import Script from "next/dist/client/script";
 
 export default function RootLayout({
                                        children,
