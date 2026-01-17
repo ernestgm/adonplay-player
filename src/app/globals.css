@@ -1,9 +1,11 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap');
 
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+  font-family: 'Outfit', sans-serif;
 }
 
 .fullscreen {

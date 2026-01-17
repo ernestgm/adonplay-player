@@ -1,18 +1,12 @@
 "use client";
 
 import './polyfills'; // <--- PRIMERA LÍNEA
-import {Outfit} from 'next/font/google';
 import './globals.css';
 
 import {SidebarProvider} from '@/context/SidebarContext';
 import {ThemeProvider} from '@/context/ThemeContext';
 import {ErrorProvider} from "@/context/ErrorContext";
 import {Suspense, useEffect} from "react";
-
-
-const outfit = Outfit({
-    subsets: ["latin"],
-});
 
 export default function RootLayout({
                                        children,
@@ -57,7 +51,7 @@ export default function RootLayout({
         <head>
             <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
         </head>
-        <body className={`${outfit.className} dark:bg-gray-900`}>
+        <body className={`dark:bg-gray-900`}>
         <ThemeProvider>
             <SidebarProvider>
                 <ErrorProvider>
