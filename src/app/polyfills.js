@@ -1,4 +1,6 @@
 // src/polyfills.js
+import 'abortcontroller-polyfill/dist/abortcontroller-polyfill-only';
+
 if (typeof globalThis === 'undefined') {
     (function() {
         if (typeof self !== 'undefined') self.globalThis = self;
