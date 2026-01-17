@@ -30,6 +30,16 @@ const nextConfig: NextConfig = {
 
     },
     allowedDevOrigins: ['10.0.2.2', 'player-adonplay.local', 'localhost'],
+    transpilePackages: [
+        "apexcharts",
+        "react-apexcharts",
+        "swiper",
+        "firebase",
+        "@fullcalendar",
+        "react-icons"
+    ],
+    // Esto ayuda a que el compilador SWC sea más conservador
+    swcMinify: true,
     /* config options here */
     webpack(config) {
         config.module.rules.push({

@@ -24,6 +24,7 @@
     "axios": "^1.10.0",
     "bootstrap": "^5.3.7",
     "clsx": "^2.1.1",
+    "core-js": "^3.47.0",
     "firebase": "^11.0.0",
     "flatpickr": "^4.6.13",
     "js-cookie": "^3.0.5",
@@ -71,5 +72,8 @@
     "Android >= 9",
     "Chrome >= 67",
     "not dead"
-  ]
+  ],
+  "engines": {
+    "node": ">=18.17.0"
+  }
 }
