@@ -41,7 +41,18 @@ const nextConfig: NextConfig = {
     // Esto ayuda a que el compilador SWC sea más conservador
     swcMinify: true,
     /* config options here */
-    webpack(config) {
+    webpack(config, {isServer}) {
+        if (!isServer) {
+            // Forzamos a que los polyfills sean parte del bundle principal
+            const originalEntry = config.entry;
+            config.entry = async () => {
+                const entries = await originalEntry();
+                if (entries['main-app'] && !entries['main-app'].includes('./src/app/polyfills.js')) {
+                    entries['main-app'].unshift('./src/app/polyfills.js');
+                }
+                return entries;
+            };
+        }
         config.module.rules.push({
             test: /\.svg$/,
             use: ["@svgr/webpack"],

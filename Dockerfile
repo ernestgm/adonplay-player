@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------
 # ETAPA 1: BUILDER (Compila artefactos de PRODUCCIÓN)
 # ----------------------------------------------------------------
-FROM node:24-alpine AS builder
+FROM node:20-alpine AS builder
 
 ARG NEXT_PUBLIC_PLAYER_API_URL
 ARG NEXT_PUBLIC_PLAYER_NAME_PAGE
