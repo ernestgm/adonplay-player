@@ -40,6 +40,10 @@ const nextConfig: NextConfig = {
     ],
     // Esto ayuda a que el compilador SWC sea más conservador
     swcMinify: true,
+    // Desactiva el indicador de hidratación que a veces rompe navegadores viejos
+    devIndicators: {
+        appIsrStatus: false,
+    },
     /* config options here */
     webpack(config) {
         config.module.rules.push({

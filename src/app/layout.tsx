@@ -1,9 +1,8 @@
 "use client";
 
+import './polyfills'; // <--- PRIMERA LÍNEA
 import {Outfit} from 'next/font/google';
 import './globals.css';
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
 
 import {SidebarProvider} from '@/context/SidebarContext';
 import {ThemeProvider} from '@/context/ThemeContext';
