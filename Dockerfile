@@ -53,7 +53,7 @@ RUN npm run build
 # ----------------------------------------------------------------
 # ETAPA 2: RUNNER (IMAGEN FINAL DE PRODUCCIÓN OPTIMIZADA)
 # ----------------------------------------------------------------
-FROM node:24-alpine AS runner
+FROM node:20-alpine AS runner
 
 WORKDIR /app
 
