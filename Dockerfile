@@ -81,7 +81,7 @@ CMD ["npm", "run", "start"]
 # ----------------------------------------------------------------
 # ETAPA 3: DEVELOPMENT (IMAGEN BASE para DESARROLLO con Volumes)
 # ----------------------------------------------------------------
-FROM node:24-alpine AS development
+FROM node:20-alpine AS development
 
 WORKDIR /app
 
