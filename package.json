@@ -42,6 +42,7 @@
     "react-icons": "^5.5.0",
     "react-player": "^3.4.0",
     "regenerator-runtime": "^0.14.1",
+    "resize-observer-polyfill": "^1.5.1",
     "swiper": "^11.2.0",
     "tailwind-merge": "^2.6.0",
     "video.js": "^8.23.4"

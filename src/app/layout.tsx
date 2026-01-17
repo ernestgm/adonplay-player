@@ -68,6 +68,20 @@ export default function RootLayout({
                     window.globalThis = window;
                   }
             `}} />
+            <script dangerouslySetInnerHTML={{ __html: `
+              // ... (tus otros parches: AbortController, globalThis)
+            
+              if (typeof window.ResizeObserver === 'undefined') {
+                window.ResizeObserver = function() {
+                  return {
+                    observe: function() {},
+                    unobserve: function() {},
+                    disconnect: function() {}
+                  };
+                };
+                console.log("ResizeObserver mocked para evitar crash");
+              }
+            `}} />
         </head>
         <body className={`dark:bg-gray-900`}>
         <ThemeProvider>

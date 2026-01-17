@@ -1,5 +1,11 @@
 // src/polyfills.js
 
+import ResizeObserver from 'resize-observer-polyfill';
+
+if (typeof window !== 'undefined' && !window.ResizeObserver) {
+    window.ResizeObserver = ResizeObserver;
+}
+
 // 1. Polyfill para Shadow DOM y Web Components
 if (typeof window !== 'undefined' && !('attachShadow' in Element.prototype)) {
     import('@webcomponents/webcomponentsjs/webcomponents-bundle.js');
