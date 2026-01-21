@@ -16,16 +16,35 @@ export default function RootLayout({
 
     useEffect(() => {
         const setAppHeight = () => {
-            console.log("Windows height", window.outerHeight)
+            const height = window.innerHeight;
+
+            // Si la altura es 0, es que el WebView no está listo.
+            // No aplicamos nada y esperamos al siguiente ciclo.
+            if (height === 0) return;
+
+            console.log("Ajustando altura a:", height);
             document.documentElement.style.setProperty(
                 "--app-height",
-                `${window.outerHeight}px`
-            )
-        }
-        setAppHeight()
-        window.addEventListener("resize", setAppHeight)
-        return () => window.removeEventListener("resize", setAppHeight)
-    }, [])
+                `${height}px`
+            );
+        };
+
+        // 1. Usamos ResizeObserver para detectar el renderizado real
+        const resizer = new ResizeObserver(() => {
+            setAppHeight();
+        });
+
+        // Observamos el body o el documento
+        resizer.observe(document.body);
+
+        // 2. Ejecución inicial con un pequeño delay de seguridad para Android TV
+        const timeoutId = setTimeout(setAppHeight, 500);
+
+        return () => {
+            resizer.disconnect();
+            clearTimeout(timeoutId);
+        };
+    }, []);
 
     // Register Service Worker for media caching
     useEffect(() => {
@@ -49,7 +68,7 @@ export default function RootLayout({
     return (
         <html lang="en">
         <head>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
             <script dangerouslySetInnerHTML={{ __html: `
                   if (typeof window.AbortController === 'undefined') {
                     (function(){
