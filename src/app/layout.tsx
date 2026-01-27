@@ -65,6 +65,19 @@ export default function RootLayout({
         }
     }, [])
 
+    useEffect(() => {
+        const hasRefreshed = sessionStorage.getItem('pageRefreshed');
+
+        if (!hasRefreshed) {
+            const timer = setTimeout(() => {
+                sessionStorage.setItem('pageRefreshed', 'true');
+                window.location.reload();
+            }, 2000);
+
+            return () => clearTimeout(timer);
+        }
+    }, []);
+
     return (
         <html lang="en">
         <head>
