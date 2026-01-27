@@ -100,7 +100,7 @@ export default function Slides({slideMedias, device}: SlidesProps) {
     return (
         <div className="position-relative w-100 h-100 d-flex flex-column bg-theme">
             { current && (
-                <div className="position-relative flex-grow-1">
+                <div className="position-relative" style={{height: device?.marquee ? "82%" : "100%"}}>
                     { current.media.media_type === "image" ? (
                         <div>
                             <Image
@@ -170,6 +170,7 @@ export default function Slides({slideMedias, device}: SlidesProps) {
                         position: current?.media.media_type === "video" ? "absolute" : "relative",
                         bottom: "0",
                         fontSize: "3em",
+                        height: "8%",
                     }}
                     className={`overflow-hidden p-1`}
                     speed={100}
