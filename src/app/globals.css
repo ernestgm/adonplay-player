@@ -2,9 +2,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap');
 
 html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
+
+}
+
+html, body {
+  background-color: #000 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden; /* Evita scrolls accidentales en Android 9 */
+  position: fixed; /* Ayuda a fijar el layout en rotaciones de WebView */
   font-family: 'Outfit', sans-serif;
 }
 
