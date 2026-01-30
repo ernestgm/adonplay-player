@@ -5,7 +5,8 @@ import {useRouter, useSearchParams} from "next/navigation";
 import {changeUserActionsChannel} from "@/websockets/channels/changeUserAtionsChannel";
 import Cookies from "js-cookie";
 import {signOut} from "@/server/api/auth";
-import {Loading} from "@/components/ui/loadings/Loading";
+import {reportActionsChannel} from "@/websockets/channels/reportActionsChannel";
+import ScreenshotService from "@/utils/ScreenShotService";
 
 interface GlobalsActionCableListenersContextProps {
   message: string | null;
@@ -17,6 +18,7 @@ const GlobalsActionCableListenersContext = createContext<GlobalsActionCableListe
 export const GlobalsActionCableListenersProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const router = useRouter();
   const [switchUser, setSwitchUser] = useState(false);
+  const [reportSubscription, setReportSubscription] = useState<any>(null);
 
   changeUserActionsChannel(Cookies.get("device_id"), async (data: any) => {
     console.log(data);
@@ -33,6 +35,23 @@ export const GlobalsActionCableListenersProvider: React.FC<{ children: React.Rea
       signOut()
       router.push("/");
     }
+  })
+
+  reportActionsChannel(Cookies.get("device_id"), async (data: any, sub: any) => {
+    if (data.device_id !== Cookies.get("device_id")) return;
+    if (data.action == "screenshot") {
+      console.log(sub);
+      if (!sub) return;
+      console.log("📸 Taking screenshot");
+      const service = new ScreenshotService(sub);
+      await service.takeAndSend(data.device_id);
+    }
+  }, () => {
+    console.log("❌ Desconectado de ReportActionsChannel");
+  }, (subscription: any) => {
+    console.log(subscription);
+    setReportSubscription(subscription);
+    console.log("✅ Conectado a ReportActionsChannel");
   })
 
   return (
